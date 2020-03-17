@@ -1,0 +1,96 @@
+## SAMPLES AND SAMPLE-SPECIFIC PARAMETERS ==========================================================
+
+# sample id: /path/to/fastq/directory
+samples:
+  sample1: /path/to/fastq/directory/sample1
+  sample2: /path/to/fastq/directory/sample2
+
+# estimated number of cells per sample, for which dge data should be extracted.
+cell_numbers:
+  sample1: 5000
+  sample2: 5000
+  
+# alignment reference for each  sample
+align_ref:
+  sample1: data/alignment_references/hg38_tapseq_ref
+  sample2: data/alignment_references/hg38_genome_ref
+  
+# 10x cell barcode whitelist file for each sample
+10x_cbc_whitelist:
+  sample1: "meta_data/10x_cell_barcode_whitelists/10x_bc_whitelist_737k_201608.txt"
+  sample2: "meta_data/10x_cell_barcode_whitelists/10x_bc_whitelist_737k_201608.txt"
+
+# number of minimum molecules per CROP-seq vector to define a cell perturbed for a given vector
+perturbation_status:
+  min_txs:
+    sample1: 8
+    sample2: 8
+
+## GENERAL PARAMETERS FOR INDIVIDUAL RULES =========================================================
+
+# step 1: create alignment reference ---------------------------------------------------------------
+download_genome_annot:
+  hg38:
+    fasta_url: ftp://ftp.ensembl.org/pub/release-89/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+    gtf_url: ftp://ftp.ensembl.org/pub/release-89/gtf/homo_sapiens/Homo_sapiens.GRCh38.89.gtf.gz
+
+create_tapseq_ref:
+  target_genes:
+    hg38_tapseq_ref: meta_data/target_gene_panels/target_genes_example.gtf
+  BSgenome_id:
+    hg38: BSgenome.Hsapiens.UCSC.hg38
+
+create_vector_ref:
+  vector_fasta:
+    hg38_tapseq_ref: meta_data/cropseq_vectors/cropseq_vectors_example.fasta
+    hg38_genome_ref: meta_data/cropseq_vectors/cropseq_vectors_example.fasta
+  vector_prefix:
+    "CROPseq_dCas9_DS_"
+  
+create_genomedir:
+  threads: 5
+  sjdb_overhang: 57
+  
+# step 2: align reads ------------------------------------------------------------------------------
+
+bc_structure: [1-16, 17-26]
+
+tag_cell_barcodes:
+  base_quality: 10
+  num_bases_below_quality: 1
+
+tag_molecule_barcodes:
+  base_quality: 10
+  num_bases_below_quality: 1
+
+trim_starting_sequence:
+  adapter_sequence: AAGCAGTGGTATCAACGCAGAGTGAATGGG
+  mismatches: 0
+  num_bases: 5
+
+trim_polyA:
+  mismatches: 0
+  num_bases: 6
+
+star_align:
+  threads: 5
+
+bead_synthesis_error:
+  min_umis_per_cell: 25
+  max_num_errors: 1
+  read_mq: 10
+  primer_sequence: null
+  edit_distance: 0
+  
+reads_per_cell:
+  read_quality: 10
+  
+# step 3: extract dge data -------------------------------------------------------------------------
+umi_observations:
+  edit_distance: 1
+  read_mq: 10
+  min_umi_reads: 0
+  rare_umi_filter_threshold: 0.0
+  
+extract_dge:
+  tpt_threshold: 0.25
