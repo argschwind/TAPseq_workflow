@@ -1,0 +1,7 @@
+The 10x cell barcode whitelists were obtained from the cell ranger software v.3.1.0. provided by
+10x genomics:
+https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest
+
+Following cell barcode whitelists are included:
+- 10x_bc_whitelist_737k_201608.txt: Chromium Single Cell 3’ Solution V2 chemistry
+- 3M-february-2018.txt.gz: Chromium Single Cell 3’ Solution V3 chemistry
